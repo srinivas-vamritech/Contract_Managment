@@ -21,9 +21,25 @@
         <members>DummyAuraComponent</members>
         <name>AuraDefinitionBundle</name>
     </types>
-        <types>
+    <types>
         <members>Account.WelcomeMessage</members>
         <name>QuickAction</name>
+    </types>
+    <types>
+        <members>WelcomePageVF</members>
+        <name>ApexPage</name>
+    </types>
+    <types>
+        <members>DummyUpdateTriggerOnAcc</members>
+        <name>ApexTrigger</name>
+    </types>
+    <types>
+        <members>WelcomeMessage</members>
+        <name>CustomLabel</name>
+    </types>
+    <types>
+        <members>Account.DummyAccountRule</members>
+        <name>ValidationRule</name>
     </types>
     <version>58.0</version>
 </Package>
