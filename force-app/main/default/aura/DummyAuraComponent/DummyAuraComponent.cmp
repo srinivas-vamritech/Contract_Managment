@@ -1,0 +1,3 @@
+<aura:component>
+    <h1>Hello, this is a dummy Aura component!</h1>
+</aura:component>

@@ -5,5 +5,25 @@
         <members>DummyWelcomeControllerTest</members>
         <name>ApexClass</name>
     </types>
+        <types>
+        <members>dummyGreetingComponent</members>
+        <name>LightningComponentBundle</name>
+    </types>
+    <types>
+        <members>Welcome_VamriTech</members>
+        <name>Flow</name>
+    </types>
+    <types>
+        <members>Account.DummyText__c</members>
+        <name>CustomField</name>
+    </types>
+    <types>
+        <members>DummyAuraComponent</members>
+        <name>AuraDefinitionBundle</name>
+    </types>
+        <types>
+        <members>Account.WelcomeMessage</members>
+        <name>QuickAction</name>
+    </types>
     <version>58.0</version>
 </Package>
