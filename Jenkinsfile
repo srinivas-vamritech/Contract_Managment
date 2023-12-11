@@ -47,23 +47,28 @@ node {
             println('Hello from a Job DSL script!')
             println(rmsg)
         }
-	    stage('Run Tests and Get Coverage') {
-    def coverageResult
-	    if (isUnix()) {
-		// Run tests
-		sh "${toolbelt}/sfdx force:apex:test:run -u ${HUB_ORG} -c -w 10 -r json > test-result.json"
-		// Get coverage
-		coverageResult = sh returnStdout: true, script: "${toolbelt}/sfdx force:apex:test:report -i $(jq -r '.result.testRunId' test-result.json) -u ${HUB_ORG} -w 10 -r json"
-	    } else {
-		bat "\"${toolbelt}/sfdx\" force:apex:test:run -u ${HUB_ORG} -c -w 10 -r json > test-result.json"
-		coverageResult = bat returnStdout: true, script: "\"${toolbelt}/sfdx\" force:apex:test:report -i %testRunId% -u ${HUB_ORG} -w 10 -r json"
-	    }
-    
-	    // Process coverage result
-	    def coverage = new JsonSlurperClassic().parseText(coverageResult)
+	stage('Run Tests and Get Coverage') {
+    	def coverageResult
+	if (isUnix()) {
+	    // Run tests
+	    sh """
+	    ${toolbelt}/sfdx force:apex:test:run -u ${HUB_ORG} -c -w 10 -r json > test-result.json
+	    """
+	    // Get coverage
+	    coverageResult = sh returnStdout: true, script: """
+	    ${toolbelt}/sfdx force:apex:test:report -i \$(jq -r '.result.testRunId' test-result.json) -u ${HUB_ORG} -w 10 -r json
+	    """
+	} else {
+	    // Run tests in Windows
+	    bat """
+	    "${toolbelt}/sfdx" force:apex:test:run -u ${HUB_ORG} -c -w 10 -r json > test-result.json
+	    """
+	    // Get coverage in Windows
+	    coverageResult = bat returnStdout: true, script: """
+	    "${toolbelt}/sfdx" force:apex:test:report -i %testRunId% -u ${HUB_ORG} -w 10 -r json
+	    """
+	}
 	    
-	    // You can access coverage data from the 'coverage' variable here
-	    println "Test Coverage: ${coverage.coverage.coverage}"
 	}
     }
 }
