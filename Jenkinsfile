@@ -48,7 +48,8 @@ node {
             println(rmsg)
         }
     stage('Run Tests In Test Scratch Org') {
-	rc = command "${toolbelt}/sfdx apex run test --target-org ciorg --wait 10 --result-format tap --code-coverage --test-level ${TEST_LEVEL}"
+	//rc = command "${toolbelt}/sfdx apex run test --target-org ciorg --wait 10 --result-format tap --code-coverage --test-level ${TEST_LEVEL}"
+	rc = command "\"${toolbelt}/sfdx\" apex run test --target-org ciorg --wait 10 --result-format tap --code-coverage --test-level ${TEST_LEVEL}"
 	if (rc != 0) {
 	    error 'Salesforce unit test run in test scratch org failed.'
 	}
