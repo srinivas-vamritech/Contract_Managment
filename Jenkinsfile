@@ -53,6 +53,7 @@ node {
 	if (rc != 0) {
 	    error 'Salesforce unit test run in test scratch org failed.'
 	}
+	    println rc
     }
     }
 }
