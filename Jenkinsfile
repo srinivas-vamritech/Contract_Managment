@@ -46,23 +46,24 @@ node {
             printf rmsg
             println('Hello from a Job DSL script!')
             println(rmsg)
-
-	// Run Apex tests and get coverage
-            def testResult
-            if (isUnix()) {
-                testResult = sh script: "${toolbelt}/sfdx force:apex:test:run -u ${HUB_ORG} --resultformat human --codecoverage --wait 10"
-            } else {
-                testResult = bat script: "\"${toolbelt}/sfdx\" force:apex:test:run -u ${HUB_ORG} --resultformat human --codecoverage --wait 10"
-            }
-
-            // Check the test result
-            if (testResult != 0) {
-                error 'Apex tests failed'
-            }
-
-            // Extract and print test coverage
-            def coverage = sh(script: "${toolbelt}/sfdx force:apex:test:report -i ${testResult} --resultformat human", returnStdout: true).trim()
-            println "Test Coverage:\n${coverage}"
         }
+	    stage('Run Tests and Get Coverage') {
+    def coverageResult
+	    if (isUnix()) {
+		// Run tests
+		sh "${toolbelt}/sfdx force:apex:test:run -u ${HUB_ORG} -c -w 10 -r json > test-result.json"
+		// Get coverage
+		coverageResult = sh returnStdout: true, script: "${toolbelt}/sfdx force:apex:test:report -i $(jq -r '.result.testRunId' test-result.json) -u ${HUB_ORG} -w 10 -r json"
+	    } else {
+		bat "\"${toolbelt}/sfdx\" force:apex:test:run -u ${HUB_ORG} -c -w 10 -r json > test-result.json"
+		coverageResult = bat returnStdout: true, script: "\"${toolbelt}/sfdx\" force:apex:test:report -i %testRunId% -u ${HUB_ORG} -w 10 -r json"
+	    }
+    
+	    // Process coverage result
+	    def coverage = new JsonSlurperClassic().parseText(coverageResult)
+	    
+	    // You can access coverage data from the 'coverage' variable here
+	    println "Test Coverage: ${coverage.coverage.coverage}"
+	}
     }
 }
