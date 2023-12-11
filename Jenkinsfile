@@ -46,6 +46,23 @@ node {
             printf rmsg
             println('Hello from a Job DSL script!')
             println(rmsg)
+
+	// Run Apex tests and get coverage
+            def testResult
+            if (isUnix()) {
+                testResult = sh script: "${toolbelt}/sfdx force:apex:test:run -u ${HUB_ORG} --resultformat human --codecoverage --wait 10"
+            } else {
+                testResult = bat script: "\"${toolbelt}/sfdx\" force:apex:test:run -u ${HUB_ORG} --resultformat human --codecoverage --wait 10"
+            }
+
+            // Check the test result
+            if (testResult != 0) {
+                error 'Apex tests failed'
+            }
+
+            // Extract and print test coverage
+            def coverage = sh(script: "${toolbelt}/sfdx force:apex:test:report -i ${testResult} --resultformat human", returnStdout: true).trim()
+            println "Test Coverage:\n${coverage}"
         }
     }
 }
