@@ -54,19 +54,19 @@ node {
 	    sh """
 	    ${toolbelt}/sfdx force:apex:test:run -u ${HUB_ORG} -c -w 10 -r json > test-result.json
 	    """
-	    // Get coverage
 	    coverageResult = sh returnStdout: true, script: """
-	    ${toolbelt}/sfdx force:apex:test:report -i \$(jq -r '.result.testRunId' test-result.json) -u ${HUB_ORG} -w 10 -r json
-	    """
+${toolbelt}/sfdx force:apex:test:report -i \$(jq -r '.result.testRunId' test-result.json) -u "${HUB_ORG}" -w 10 -r json
+"""
+
 	} else {
 	    // Run tests in Windows
 	    bat """
 	    "${toolbelt}/sfdx" force:apex:test:run -u ${HUB_ORG} -c -w 10 -r json > test-result.json
 	    """
-	    // Get coverage in Windows
 	    coverageResult = bat returnStdout: true, script: """
-	    "${toolbelt}/sfdx" force:apex:test:report -i %testRunId% -u ${HUB_ORG} -w 10 -r json
-	    """
+"${toolbelt}/sfdx" force:apex:test:report -i %testRunId% -u "${HUB_ORG}" -w 10 -r json
+"""
+
 	}
 	    
 	}
